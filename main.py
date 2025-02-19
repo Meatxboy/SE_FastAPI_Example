@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Модель определяет позитивную, нейтральную или негативную эмоцию содержит в себе текст.
+
 from fastapi import FastAPI
 from transformers import pipeline
 from pydantic import BaseModel
@@ -15,6 +18,13 @@ classifier = pipeline("sentiment-analysis")
 def root():
     return {"FastApi service started!"}
 
+@app.get('/how/')
+def how():
+    text = "Hello world!"
+    res = classifier(text)
+    acc = round(res[0]['score'] * 100, 2)
+
+    return 'Например, я считаю, что фраза "Hello world!" позитивна на ' + str(acc) + '%'
 
 @app.get("/{text}")
 def get_params(text: str):
